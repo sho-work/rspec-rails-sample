@@ -5,10 +5,11 @@ class Blog < ApplicationRecord
   scope :published, -> { where(published: true) }
   scope :unpublished, -> { where(published: false) }
 
-  def self.search(query)
-    return all if query.blank?
+  def self.filter_by_title(title)
+    return all if title.blank?
+    sanitized_title = sanitize_sql_for_conditions(["title LIKE ?", "%#{title}%"])
 
-    where("title LIKE :query OR content LIKE :query", query: "%#{query}%")
+    where(sanitized_title)
   end
 
   def self.filter_by_status(status)

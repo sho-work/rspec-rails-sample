@@ -4,9 +4,9 @@ class Api::V1::BlogsController < ApplicationController
   # GET /api/v1/blogs
   def index
     blogs = Blog.all
-    blogs = blogs.search(params[:q]) if params[:q].present?
+    blogs = blogs.filter_by_title(params[:title]) if params[:title].present?
     blogs = blogs.filter_by_status(params[:status]) if params[:status].present?
-    
+
     render json: blogs
   end
 
