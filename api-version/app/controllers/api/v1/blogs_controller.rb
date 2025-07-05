@@ -3,9 +3,24 @@ class Api::V1::BlogsController < ApplicationController
 
   # GET /api/v1/blogs
   def index
+    # TODO: paginationを実装する
+    # TODO: class methodを利用してフィルタリングする
+    # blogs = Blog.filter_by_title(params[:title])
+    #             .filter_by_status(params[:status])
     blogs = Blog.all
-    blogs = blogs.filter_by_title(params[:title]) if params[:title].present?
-    blogs = blogs.filter_by_status(params[:status]) if params[:status].present?
+    if params[:title].present?
+      sanitized_title = sanitize_sql_for_conditions(["title LIKE ?", "%#{params[:title]}%"])
+      blogs = blogs.where(sanitized_title)
+    end
+
+    if params[:status].present?
+      case params[:status]
+      when 'published'
+        blogs = blogs.published
+      when 'unpublished'
+        blogs = blogs.unpublished
+      end
+    end
 
     render json: blogs
   end
