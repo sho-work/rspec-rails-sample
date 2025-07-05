@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# データベースセットアップスクリプト
+# 開発環境とテスト環境の両方のデータベースを作成し、マイグレーションを実行します
+
+set -e
+
+echo "🚀 データベースセットアップを開始します..."
+
+# 開発環境のデータベースセットアップ
+echo "📦 開発環境のデータベースを作成中..."
+docker compose exec web bin/rails db:create
+
+echo "🔄 開発環境のマイグレーションを実行中..."
+docker compose exec web bin/rails db:migrate
+
+# テスト環境のデータベースセットアップ
+echo "🧪 テスト環境のデータベースを作成中..."
+docker compose exec web bin/rails db:create RAILS_ENV=test
+
+echo "🔄 テスト環境のマイグレーションを実行中..."
+docker compose exec web bin/rails db:migrate RAILS_ENV=test
+
+echo "✅ データベースセットアップが完了しました！"
+echo ""
+echo "📊 データベースの状態:"
+echo "   - 開発環境: 作成済み・マイグレーション済み"
+echo "   - テスト環境: 作成済み・マイグレーション済み"
