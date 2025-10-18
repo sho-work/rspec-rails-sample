@@ -9,7 +9,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3308:3306"
 
   web:
     build: .
@@ -17,13 +17,14 @@ services:
     volumes:
       - .:/app
     ports:
-      - "3000:3000"
+      - "3002:3000"
     depends_on:
       - database
     environment:
       DATABASE_HOST: database
       DATABASE_USER: root
       DATABASE_PASSWORD: password
+      DATABASE_PORT: 3306
       RAILS_ENV: development
 
 volumes:
