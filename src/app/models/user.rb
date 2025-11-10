@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_one :user_credential, dependent: :destroy
   has_one :user_profile, dependent: :destroy
-  has_many :user_statuses, dependent: :destroy
+  has_many :user_statuses, dependent: :delete_all
   has_many :blogs, dependent: :destroy
 
   validates_associated :user_credential, :user_profile

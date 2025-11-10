@@ -348,7 +348,7 @@ RSpec.describe Blog, type: :model do
         create(:blog_tag, blog: blog, tag: tag2)
         create(:blog_tag, blog: blog, tag: tag3)
 
-        expect(blog.tag_list).to eq('Ruby, Rails, Programming')
+        expect(blog.tag_list).to eq('Programming, Rails, Ruby')
       end
 
       it 'returns empty string when blog has no tags' do

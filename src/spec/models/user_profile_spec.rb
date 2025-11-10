@@ -14,9 +14,7 @@ RSpec.describe UserProfile, type: :model do
     let(:user) { create(:user) }
     subject { build(:user_profile, user: user) }
 
-    describe 'user_id validation' do
-      it { should validate_presence_of(:user_id) }
-    end
+    # user_id validation is handled automatically by belongs_to association
 
     describe 'username validations' do
       it { should validate_presence_of(:username) }

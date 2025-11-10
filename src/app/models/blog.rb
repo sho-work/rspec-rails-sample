@@ -50,7 +50,7 @@ class Blog < ApplicationRecord
   end
 
   def tag_list
-    tags.pluck(:name).join(", ")
+    tags.order(:name).pluck(:name).join(", ")
   end
 
   class << self

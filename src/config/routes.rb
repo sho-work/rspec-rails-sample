@@ -14,6 +14,15 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      # Auth endpoints
+      post 'auth/signup', to: 'auth#signup'
+      post 'auth/login', to: 'auth#login'
+      delete 'auth/logout', to: 'auth#logout'
+      get 'auth/me', to: 'auth#me'
+
+      # Resource endpoints
+      resources :users, only: [:index, :show, :update, :destroy]
+      resources :tags
       resources :blogs
     end
   end

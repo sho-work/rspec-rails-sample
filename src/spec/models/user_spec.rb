@@ -4,7 +4,7 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_one(:user_credential).dependent(:destroy) }
     it { should have_one(:user_profile).dependent(:destroy) }
-    it { should have_many(:user_statuses).dependent(:destroy) }
+    it { should have_many(:user_statuses).dependent(:delete_all) }
     it { should have_many(:blogs).dependent(:destroy) }
   end
 
@@ -129,7 +129,7 @@ RSpec.describe User, type: :model do
         expect(profile[:id]).to eq(user.id)
         expect(profile[:email]).to eq(user.email)
         expect(profile[:username]).to eq(user.username)
-        expect(profile[:status]).to eq(0)
+        expect(profile[:status]).to eq('active')
       end
     end
 

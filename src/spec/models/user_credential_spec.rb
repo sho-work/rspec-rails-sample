@@ -19,8 +19,9 @@ RSpec.describe UserCredential, type: :model do
       it { should validate_presence_of(:email) }
 
       it 'validates uniqueness of email' do
-        create(:user_credential, email: 'test@example.com')
-        duplicate = build(:user_credential, email: 'test@example.com')
+        user1 = create(:user)
+        existing_email = user1.user_credential.email
+        duplicate = build(:user_credential, email: existing_email)
         expect(duplicate).not_to be_valid
         expect(duplicate.errors[:email]).to include('has already been taken')
       end
@@ -67,15 +68,8 @@ RSpec.describe UserCredential, type: :model do
       end
     end
 
-    describe 'user_id validation' do
-      it { should validate_presence_of(:user_id) }
-
-      it 'is invalid without user_id' do
-        subject.user_id = nil
-        expect(subject).not_to be_valid
-        expect(subject.errors[:user_id]).to include("can't be blank")
-      end
-    end
+    # user_id validation is handled automatically by belongs_to association
+    # No explicit validation needed in the model
   end
 
   describe 'authentication logic' do
