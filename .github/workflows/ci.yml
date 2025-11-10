@@ -48,12 +48,11 @@ jobs:
         run: |
           docker compose up -d database
           sleep 10
-          docker compose run web rails db:create
-          docker compose run web rails db:create RAILS_ENV=test
-          docker compose run web rails db:migrate RAILS_ENV=test
+          docker compose run -e RAILS_ENV=test web rails db:create
+          docker compose run -e RAILS_ENV=test web rails db:migrate
 
       - name: Run RSpec
-        run: docker compose run web bundle exec rspec
+        run: docker compose run -e RAILS_ENV=test web bundle exec rspec
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
