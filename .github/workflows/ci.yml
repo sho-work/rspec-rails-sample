@@ -11,6 +11,9 @@ on:
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
 
     steps:
       - name: Checkout code
@@ -19,14 +22,18 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: src/.ruby-version
           bundler-cache: true
+          working-directory: src
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
 
   scan_js:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
 
     steps:
       - name: Checkout code
@@ -35,14 +42,18 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: src/.ruby-version
           bundler-cache: true
+          working-directory: src
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
 
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,14 +61,18 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: src/.ruby-version
           bundler-cache: true
+          working-directory: src
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
 
     services:
       mysql:
@@ -84,8 +99,9 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: src/.ruby-version
           bundler-cache: true
+          working-directory: src
 
       - name: Set up database
         env:
@@ -104,5 +120,5 @@ jobs:
         if: failure()
         with:
           name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          path: ${{ github.workspace }}/src/tmp/screenshots
           if-no-files-found: ignore
