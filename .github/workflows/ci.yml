@@ -42,12 +42,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image with cache
+      - name: Build and push a Docker image with cache
         uses: docker/build-push-action@v5
         with:
           context: ./src
-          push: false
-          load: true
+          push: true
           tags: rspec-rails-sample-web:latest
-          cache-from: type=registry,ref=ghcr.io/sho-work/rspec-rails-sample/web:buildcache
-          cache-to: type=registry,ref=ghcr.io/sho-work/rspec-rails-sample/web:buildcache,mode=max
+          # reference: https://buildjet.com/for-github-actions/docs/guides/migrating-to-buildjet-cache#migrating-docker-cache
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
