@@ -23,6 +23,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: CPU Benchmark (cryptographic hashing)
+        run: |
+          echo "Starting CPU benchmark with SHA-512 hashing..."
+          echo "This workload should take ~90-120s depending on CPU performance"
+          time for i in $(seq 1 50000); do
+            echo "benchmark data iteration $i" | openssl dgst -sha512 > /dev/null
+          done
+          echo "Benchmark completed!"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
