@@ -55,7 +55,7 @@ jobs:
         run: docker compose run -e RAILS_ENV=test web bundle exec rspec
 
       - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: screenshots
