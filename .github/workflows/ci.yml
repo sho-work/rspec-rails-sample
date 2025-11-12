@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image with cache
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src
+          push: false
+          load: true
+          tags: gha-3rd-party-runner-sample-web:latest
+          cache-from: type=registry,ref=ghcr.io/org-for-3rd-party-runner/gha-3rd-party-runner-sample/web:buildcache
+          cache-to: type=registry,ref=ghcr.io/org-for-3rd-party-runner/gha-3rd-party-runner-sample/web:buildcache,mode=max
+
+      - name: Create and Setup DB
+        # MySQLコンテナが応答できるまで10秒スリープする
+        run: |
+          docker compose up -d database
+          sleep 10
+          docker compose run -e RAILS_ENV=test web rails db:create
+          docker compose run -e RAILS_ENV=test web rails db:migrate
+
+      - name: Run RSpec
+        run: docker compose run -e RAILS_ENV=test web bundle exec rspec
+
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/src/tmp/screenshots
+          if-no-files-found: ignore
