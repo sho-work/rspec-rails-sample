@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push a Docker image with cache
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./src
           push: true
