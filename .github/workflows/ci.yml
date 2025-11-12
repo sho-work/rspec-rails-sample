@@ -48,6 +48,5 @@ jobs:
           context: ./src
           push: true
           tags: rspec-rails-sample-web:latest
-          # reference: https://buildjet.com/for-github-actions/docs/guides/migrating-to-buildjet-cache#migrating-docker-cache
-          cache-from: type=registry,ref=user/app:latest
-          cache-to: type=inline
+          cache-from: type=registry,ref=ghcr.io/sho-work/rspec-rails-sample/web:buildcache
+          cache-to: type=registry,ref=ghcr.io/sho-work/rspec-rails-sample/web:buildcache,mode=max
