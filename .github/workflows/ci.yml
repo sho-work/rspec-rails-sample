@@ -8,6 +8,7 @@ on:
     branches:
       - main
 
+# 検証5
 jobs:
   test:
     runs-on: buildjet-2vcpu-ubuntu-2204
